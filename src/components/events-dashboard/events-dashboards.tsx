@@ -1,56 +1,51 @@
 "use client";
 
-import { useState } from "react";
-
-import { CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { InView } from "react-intersection-observer";
 
-import { EventProps } from "@/shared/enums/routes/interfaces/event";
+import { EventProps } from "@/shared/interfaces/event";
 import { EventCard } from "@/components/event-card/event-card";
+import { useInfinityLoadEvents } from "@/hooks/use-infinity-load-events/use-infinity-load-events";
+import { SelectWithSortOptions } from "@/components/select-with-sort-options/select-with-sort-options";
 
 interface Props {
   list: EventProps[];
 }
 
 export const EventsDashboards = ({ list }: Props): JSX.Element => {
-  const initialList = list.slice(0, 3);
-  const delay = 5000;
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentList, setCurrentList] = useState<EventProps[]>(initialList);
-
-  const loadMoreEvents = () => {
-    setIsLoading(true);
-    if (currentList.length >= list.length) {
-      setTimeout(() => setIsLoading(false), delay);
-      return;
-    }
-
-    setCurrentList([
-      ...currentList,
-      ...list.slice(currentList.length, currentList.length + 3),
-    ]);
-
-    setTimeout(() => setIsLoading(false), delay);
-  };
+  const { currentList, isLoading, loadMoreEvents } =
+    useInfinityLoadEvents(list);
 
   return (
-    <Grid container spacing={2}>
-      {currentList.map(({ id, ...props }: EventProps) => (
-        <EventCard key={id} id={id} {...props} />
-      ))}
+    <Box>
+      <Grid container sx={{ marginBlock: "1rem" }}>
+        <Grid
+          item
+          xs={8}
+          lg={10}
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          <Typography variant="h5">Sort events by:</Typography>
+        </Grid>
+        <Grid item xs={4} lg={2}>
+          <SelectWithSortOptions />
+        </Grid>
+      </Grid>
 
-      {isLoading && <CircularProgress sx={{ margin: "1rem auto" }} />}
+      <Grid container spacing={2}>
+        {currentList.map(({ id, ...props }: EventProps) => (
+          <EventCard key={id} id={id} {...props} />
+        ))}
 
-      <InView
-        className="w-full"
-        as="div"
-        onChange={(inView, entry) => loadMoreEvents()}
-      >
-        <h2 className="w-full text-center bg-red-500">
-          Plain children are always rendered. Use onChange to monitor state.
-        </h2>
-      </InView>
-    </Grid>
+        {isLoading && <CircularProgress sx={{ margin: "1rem auto" }} />}
+
+        <InView
+          className="w-full h-5 mx-auto"
+          as="div"
+          threshold={1}
+          onChange={loadMoreEvents}
+        ></InView>
+      </Grid>
+    </Box>
   );
 };

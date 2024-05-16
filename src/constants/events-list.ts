@@ -1,4 +1,4 @@
-import { EventProps } from "@/shared/enums/routes/interfaces/event";
+import { EventProps } from "@/shared/interfaces/event";
 
 export const EVENTS_LIST: EventProps[] = [
   {

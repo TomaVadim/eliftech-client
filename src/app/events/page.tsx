@@ -1,6 +1,7 @@
+import { Container, Typography } from "@mui/material";
+
 import { EventsDashboards } from "@/components/events-dashboard/events-dashboards";
 import { EVENTS_LIST } from "@/constants/events-list";
-import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
 
 export default function Events() {
   return (
