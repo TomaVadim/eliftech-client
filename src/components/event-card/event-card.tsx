@@ -1,9 +1,12 @@
+import Link from "next/link";
+
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 
-import { EventProps } from "@/shared/enums/routes/interfaces/event";
+import { EventProps } from "@/shared/interfaces/event";
+import { PUBLIC_ROUTES } from "@/shared/enums/routes/public-routes";
 
 export const EventCard = (props: EventProps): JSX.Element => {
-  const { title, description, date, organizer } = props;
+  const { id, title, description, date, organizer } = props;
 
   return (
     <Grid item xs={12} md={4}>
@@ -43,9 +46,13 @@ export const EventCard = (props: EventProps): JSX.Element => {
           component="div"
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Button variant="text">Register</Button>
+          <Button variant="text">
+            <Link href={`${PUBLIC_ROUTES.REGISTER}/${id}`}>Register</Link>
+          </Button>
 
-          <Button variant="text">View</Button>
+          <Button variant="text">
+            <Link href={`${PUBLIC_ROUTES.PARTICIPANTS}/${id}`}>View</Link>
+          </Button>
         </Box>
       </Paper>
     </Grid>
