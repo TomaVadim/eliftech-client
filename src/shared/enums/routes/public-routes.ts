@@ -3,4 +3,5 @@ export const enum PUBLIC_ROUTES {
   EVENTS = "/events",
   REGISTER = "/events/register",
   PARTICIPANTS = "/events/participants",
+  CREATE = "/events/create",
 }
