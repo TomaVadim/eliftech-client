@@ -1,29 +1,43 @@
 "use client";
 
+import { Box, Button } from "@mui/material";
+
 import { CheckboxLabels } from "@/components/checkbox-labels/checkbox-labels";
 import { InputField } from "@/components/input-field/input-field";
 import {
   RegisterFormData,
   useValidateRegisterForm,
 } from "@/schemas/validation/register-form.validation";
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Typography,
-} from "@mui/material";
+import { fetcher } from "@/api/fetcher";
 
-export const RegisterForm = () => {
+export const RegisterForm = ({ id }: { id: string }) => {
   const {
     formState: { errors },
     register,
+    reset,
     handleSubmit,
   } = useValidateRegisterForm();
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log(data);
+  const onSubmit = async (data: RegisterFormData) => {
+    const newParticipant = {
+      ...data,
+      selectedOption: data.selectedOption.join(","),
+    };
+
+    try {
+      const response = await fetcher.put(
+        "/events/new-participant",
+        newParticipant,
+        {
+          params: { eventId: id },
+        }
+      );
+
+      console.log(response);
+      reset();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

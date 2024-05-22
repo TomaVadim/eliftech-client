@@ -30,6 +30,10 @@ export default function Home() {
         <Button variant="contained" size="large">
           <Link href={PUBLIC_ROUTES.EVENTS}>Look at events</Link>
         </Button>
+
+        <Button variant="contained" color="secondary" size="large">
+          <Link href={PUBLIC_ROUTES.CREATE}>Create new event</Link>
+        </Button>
       </Box>
     </Container>
   );

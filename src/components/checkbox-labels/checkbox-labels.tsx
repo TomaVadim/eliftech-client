@@ -13,6 +13,10 @@ interface Props {
 export const CheckboxLabels = ({ register, error }: Props) => {
   return (
     <FormGroup>
+      <Typography component="p" variant="body1" sx={{ marginBottom: ".5rem" }}>
+        Where did you hear about this event?
+      </Typography>
+
       <FormControlLabel
         control={<Checkbox />}
         {...register("selectedOption")}
