@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import {
   FormControl,
   InputLabel,
@@ -8,12 +6,15 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-export const SelectWithSortOptions = (): JSX.Element => {
-  const [sortBy, setSortBy] = useState("");
+interface Props {
+  sortBy: string;
+  onChange: (event: SelectChangeEvent<string>) => void;
+}
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSortBy(event.target.value as string);
-  };
+export const SelectWithSortOptions = ({
+  sortBy,
+  onChange,
+}: Props): JSX.Element => {
   return (
     <FormControl fullWidth>
       <InputLabel id="demo-simple-select-label">Sort by</InputLabel>
@@ -22,8 +23,9 @@ export const SelectWithSortOptions = (): JSX.Element => {
         id="demo-simple-select"
         value={sortBy}
         label="Sort by"
-        onChange={handleChange}
+        onChange={(e) => onChange(e)}
       >
+        <MenuItem value="default">Default</MenuItem>
         <MenuItem value="date">Date</MenuItem>
         <MenuItem value="title">Title</MenuItem>
         <MenuItem value="organizer">Organizer</MenuItem>
