@@ -2,10 +2,10 @@ import Link from "next/link";
 
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 
-import { EventProps } from "@/shared/interfaces/event";
 import { PUBLIC_ROUTES } from "@/shared/enums/routes/public-routes";
+import { EventResponse } from "@/schemas/event-response/event-response";
 
-export const EventCard = (props: EventProps): JSX.Element => {
+export const EventCard = (props: EventResponse): JSX.Element => {
   const { id, title, description, date, organizer } = props;
 
   return (

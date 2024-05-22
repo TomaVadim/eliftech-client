@@ -1,20 +1,23 @@
 "use client";
+import { useState } from "react";
 
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { Box, Grid, SelectChangeEvent, Typography } from "@mui/material";
 import { InView } from "react-intersection-observer";
 
-import { EventProps } from "@/shared/interfaces/event";
 import { EventCard } from "@/components/event-card/event-card";
-import { useInfinityLoadEvents } from "@/hooks/use-infinity-load-events/use-infinity-load-events";
 import { SelectWithSortOptions } from "@/components/select-with-sort-options/select-with-sort-options";
+import useInfiniteLoadEvents from "@/api/hooks/use-infinity-load-events";
+import { useSortEvents } from "@/hooks/use-sort-events";
 
-interface Props {
-  list: EventProps[];
-}
+export const EventsDashboards = (): JSX.Element => {
+  const [sortBy, setSortBy] = useState("default");
+  const { events, loadMoreEvents } = useInfiniteLoadEvents();
+  const { sortedEvents } = useSortEvents(events, sortBy);
 
-export const EventsDashboards = ({ list }: Props): JSX.Element => {
-  const { currentList, isLoading, loadMoreEvents } =
-    useInfinityLoadEvents(list);
+  console.log(sortedEvents);
+  const handleChangeSortMethod = (event: SelectChangeEvent<string>) => {
+    setSortBy(event.target.value);
+  };
 
   return (
     <Box>
@@ -28,24 +31,30 @@ export const EventsDashboards = ({ list }: Props): JSX.Element => {
           <Typography variant="h5">Sort events by:</Typography>
         </Grid>
         <Grid item xs={4} lg={2}>
-          <SelectWithSortOptions />
+          <SelectWithSortOptions
+            sortBy={sortBy}
+            onChange={handleChangeSortMethod}
+          />
         </Grid>
       </Grid>
 
       <Grid container spacing={2}>
-        {currentList.map(({ id, ...props }: EventProps) => (
-          <EventCard key={id} id={id} {...props} />
+        {sortedEvents.length === 0 && (
+          <Grid item xs={12}>
+            <Typography
+              sx={{ marginTop: "3rem", textAlign: "center" }}
+              variant="h5"
+            >
+              No events yet
+            </Typography>
+          </Grid>
+        )}
+
+        {sortedEvents.map((event) => (
+          <EventCard key={event.id} {...event} />
         ))}
-
-        {isLoading && <CircularProgress sx={{ margin: "1rem auto" }} />}
-
-        <InView
-          className="w-full h-5 mx-auto"
-          as="div"
-          threshold={1}
-          onChange={loadMoreEvents}
-        ></InView>
       </Grid>
+      <InView className="w-full h-5" as="div" onChange={loadMoreEvents} />
     </Box>
   );
 };
