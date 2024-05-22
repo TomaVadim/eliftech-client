@@ -1,7 +1,8 @@
 import { Paper, Typography } from "@mui/material";
-import { RegisterForm } from "./form";
 
-export default function Register({ params }: { params: { id: string } }) {
+import { CreateNewEventForm } from "./form";
+
+export default function Create() {
   return (
     <section className="h-screen flex items-center justify-center">
       <Paper elevation={3} sx={{ width: "min(90%, 400px)", p: "2rem" }}>
@@ -14,7 +15,7 @@ export default function Register({ params }: { params: { id: string } }) {
           Event registration
         </Typography>
 
-        <RegisterForm id={params.id} />
+        <CreateNewEventForm />
       </Paper>
     </section>
   );
