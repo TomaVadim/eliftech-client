@@ -5,11 +5,13 @@ import {
   EventResponse,
   EventResponseSchema,
 } from "@/schemas/event-response/event-response";
+import { isAxiosError } from "axios";
 
 const useInfiniteLoadEvents = (initialPage = 1, limit = 10) => {
   const [events, setEvents] = useState<EventResponse[]>([]);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchEvents = useCallback(async () => {
     if (!hasMore) return;
@@ -23,19 +25,25 @@ const useInfiniteLoadEvents = (initialPage = 1, limit = 10) => {
       const validatedEvents = EventResponseSchema.array().parse(newEvents);
 
       setEvents((prevEvents) => {
-        const newEventIds = validatedEvents.map((event) => event.id);
         const existingEventIds = prevEvents.map((event) => event.id);
 
         const filteredNewEvents = validatedEvents.filter(
           (event) => !existingEventIds.includes(event.id)
         );
 
-        return [...prevEvents, ...filteredNewEvents].reverse();
+        return [...prevEvents, ...filteredNewEvents];
       });
 
       setHasMore(validatedEvents.length > 0);
     } catch (error) {
-      console.error("Failed to load events", error);
+      if (error instanceof Error) {
+        setError(error.message);
+        return error.message;
+      }
+      if (isAxiosError(error)) {
+        setError(error.response?.data.message);
+        return error.response?.data.message;
+      }
     } finally {
     }
   }, [page, limit, hasMore]);
@@ -50,7 +58,7 @@ const useInfiniteLoadEvents = (initialPage = 1, limit = 10) => {
     }
   };
 
-  return { events, hasMore, loadMoreEvents };
+  return { events, error, hasMore, loadMoreEvents };
 };
 
 export default useInfiniteLoadEvents;
