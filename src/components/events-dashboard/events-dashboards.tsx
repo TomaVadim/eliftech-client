@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { Box, Grid, SelectChangeEvent, Typography } from "@mui/material";
 import { InView } from "react-intersection-observer";
+import toast, { Toaster } from "react-hot-toast";
 
 import { EventCard } from "@/components/event-card/event-card";
 import { SelectWithSortOptions } from "@/components/select-with-sort-options/select-with-sort-options";
@@ -11,17 +12,27 @@ import { useSortEvents } from "@/hooks/use-sort-events";
 
 export const EventsDashboards = (): JSX.Element => {
   const [sortBy, setSortBy] = useState("default");
-  const { events, loadMoreEvents } = useInfiniteLoadEvents();
+  const { events, error, loadMoreEvents } = useInfiniteLoadEvents();
   const { sortedEvents } = useSortEvents(events, sortBy);
 
-  console.log(sortedEvents);
+  if (error) {
+    toast.error("Something went wrong", { id: "events" });
+  }
+
   const handleChangeSortMethod = (event: SelectChangeEvent<string>) => {
     setSortBy(event.target.value);
   };
 
   return (
     <Box>
-      <Grid container sx={{ marginBlock: "1rem" }}>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          id: "events",
+        }}
+        reverseOrder={false}
+      />
+      <Grid container sx={{ marginBlock: "2rem" }}>
         <Grid
           item
           xs={8}
