@@ -8,7 +8,7 @@ export default function EventsLayout({
   return (
     <>
       <Header />
-      {children}
+      <section className="pt-28 pb-20">{children}</section>
     </>
   );
 }

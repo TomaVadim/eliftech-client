@@ -1,5 +1,30 @@
+import { Metadata } from "next";
+
 import { Paper, Typography } from "@mui/material";
+
 import { RegisterForm } from "./form";
+import { fetcher } from "@/api/fetcher";
+import { EventResponseSchema } from "@/schemas/event-response/event-response";
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> => {
+  const response = await fetcher("/events", { params: { eventId: params.id } });
+
+  if (!response.data) {
+    return {
+      title: `Eventer | Event not found`,
+    };
+  }
+
+  const validatedResponse = EventResponseSchema.parse(response.data);
+
+  return {
+    title: `Eventer | ${validatedResponse.title}`,
+  };
+};
 
 export default function Register({ params }: { params: { id: string } }) {
   return (
@@ -11,7 +36,7 @@ export default function Register({ params }: { params: { id: string } }) {
           fontWeight={500}
           sx={{ mb: "1rem", textAlign: "center" }}
         >
-          Event registration
+          Register to event
         </Typography>
 
         <RegisterForm id={params.id} />
