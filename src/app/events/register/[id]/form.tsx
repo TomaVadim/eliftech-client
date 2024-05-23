@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Button } from "@mui/material";
+import toast, { Toaster } from "react-hot-toast";
 
 import { CheckboxLabels } from "@/components/checkbox-labels/checkbox-labels";
 import { InputField } from "@/components/input-field/input-field";
@@ -33,10 +34,13 @@ export const RegisterForm = ({ id }: { id: string }) => {
         }
       );
 
-      console.log(response);
+      if (response.status === 200) {
+        console.log(response.status);
+        toast.success("You're registered successfully", { id: "register" });
+      }
       reset();
     } catch (error) {
-      console.error(error);
+      toast.error("Something went wrong", { id: "register" });
     }
   };
 
@@ -46,6 +50,7 @@ export const RegisterForm = ({ id }: { id: string }) => {
       onSubmit={handleSubmit(onSubmit)}
       sx={{ display: "flex", flexDirection: "column", gap: 3, padding: 2 }}
     >
+      <Toaster position="top-center" toastOptions={{ id: "register" }} />
       <InputField
         label="Full name"
         name="fullName"

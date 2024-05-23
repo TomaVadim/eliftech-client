@@ -1,6 +1,12 @@
 import { Paper, Typography } from "@mui/material";
 
 import { CreateNewEventForm } from "./form";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Eventer | Create new event",
+  description: "Create new event",
+};
 
 export default function Create() {
   return (
@@ -12,7 +18,7 @@ export default function Create() {
           fontWeight={500}
           sx={{ mb: "1rem", textAlign: "center" }}
         >
-          Event registration
+          Register new event
         </Typography>
 
         <CreateNewEventForm />
